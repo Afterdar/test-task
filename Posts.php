@@ -19,7 +19,7 @@ class Posts
         return $posts;
     }
 
-    public function addPost(string $title, string $body, int $userId): array
+    public function addPost(string $title, string $body, int $userId): array|object
     {
         $data = ['title' => $title, 'body' => $body, 'userId' => $userId];
 
@@ -28,6 +28,7 @@ class Posts
         $api = curl_init($this->apiPosts);
         curl_setopt($api, CURLOPT_POST, true);
         curl_setopt($api, CURLOPT_POSTFIELDS, $dataJson);
+        curl_setopt($api, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($api, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($api, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
 
@@ -38,17 +39,18 @@ class Posts
         return $posts;
     }
 
-    public function updatePost(string $title, string $body, int $userId): array
+    public function updatePost(int $id, string $title, string $body, int $userId): array|object
     {
-        $data = ['title' => $title, 'body' => $body, 'userId' => $userId];
+        $data = ['id' => $id,'title' => $title, 'body' => $body, 'userId' => $userId];
 
         $dataJson = json_encode($data);
 
         $api = curl_init($this->apiPosts);
-        curl_setopt($api, CURLOPT_PUT, true);
+        curl_setopt($api, CURLOPT_POST, true);
         curl_setopt($api, CURLOPT_POSTFIELDS, $dataJson);
+        curl_setopt($api, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($api, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($api, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($api, CURLOPT_HTTPHEADER, array('Content-Type:application/json; charset=UTF-8'));
 
         $result = curl_exec($api);
         $posts = json_decode($result);
@@ -57,7 +59,7 @@ class Posts
         return $posts;
     }
 
-    public function deletePost(int $userId): array
+    public function deletePost(int $userId): array|object
     {
         $data = ['userId' => $userId];
 
@@ -66,6 +68,7 @@ class Posts
         $api = curl_init($this->apiPosts);
         curl_setopt($api, CURLOPT_CUSTOMREQUEST, "DELETE");
         curl_setopt($api, CURLOPT_POSTFIELDS, $dataJson);
+        curl_setopt($api, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($api, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($api, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
 
